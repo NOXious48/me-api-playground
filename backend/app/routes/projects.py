@@ -5,10 +5,9 @@ router = APIRouter(prefix="/projects", tags=["Projects"])
 
 @router.get("/")
 def list_projects():
-    projects = list(
+    return list(
         projects_collection.find({}, {"_id": 0, "slug": 1, "title": 1, "subtitle": 1})
     )
-    return projects
 
 @router.get("/{slug}")
 def get_project(slug: str):

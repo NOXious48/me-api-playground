@@ -1,14 +1,15 @@
 from fastapi import APIRouter, HTTPException
 from app.db import profile_collection, projects_collection
 
-router = APIRouter(tags=["Search"])
+router = APIRouter(prefix="/search", tags=["Search"])
+
 
 # --------------------------------------------------
 # 1️⃣ List technical skills
 # --------------------------------------------------
 @router.get("/skills")
 def list_skills():
-    profile = profile_collection.find_one({})
+    profile = profile_collection.find_one({}, {"_id": 0})
     if not profile:
         raise HTTPException(status_code=404, detail="Profile not found")
 
@@ -16,11 +17,11 @@ def list_skills():
 
 
 # --------------------------------------------------
-# 2️⃣ Search SHORT project summaries (CV-level)
+# 2️⃣ Search CV-level project summaries (profile projects)
 # --------------------------------------------------
-@router.get("/profile/projects")
+@router.get("/profile-projects")
 def search_profile_projects(keyword: str):
-    profile = profile_collection.find_one({})
+    profile = profile_collection.find_one({}, {"_id": 0})
     if not profile:
         raise HTTPException(status_code=404, detail="Profile not found")
 
@@ -34,53 +35,17 @@ def search_profile_projects(keyword: str):
 
 
 # --------------------------------------------------
-# 3️⃣ List FULL project pages (VREyeSAM, SSBC)
+# 3️⃣ Global search across profile + project pages
 # --------------------------------------------------
-@router.get("/projects")
-def list_project_pages():
-    return [
-        {
-            "slug": p["slug"],
-            "title": p["title"],
-            "subtitle": p["subtitle"]
-        }
-        for p in projects_collection.find({}, {"_id": 0})
-    ]
-
-
-# --------------------------------------------------
-# 4️⃣ Get FULL project page by slug
-# --------------------------------------------------
-@router.get("/projects/{slug}")
-def get_project_page(slug: str):
-    project = projects_collection.find_one({"slug": slug}, {"_id": 0})
-    if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
-
-    return project
-
-
-# --------------------------------------------------
-# 5️⃣ Global search across profile + project pages
-# --------------------------------------------------
-@router.get("/search")
+@router.get("/")
 def full_text_search(q: str):
     q = q.lower()
     results = []
 
-    profile = profile_collection.find_one({})
+    profile = profile_collection.find_one({}, {"_id": 0})
 
+    # ---- Search experience ----
     if profile:
-        # Profile project summaries
-        for project in profile.get("projects", []):
-            if q in project.get("description", "").lower():
-                results.append({
-                    "type": "profile_project",
-                    "title": project.get("project_title"),
-                    "data": project
-                })
-
-        # Experience
         for exp in profile.get("experience", []):
             haystack = (exp.get("role", "") + exp.get("organization", "")).lower()
             if q in haystack:
@@ -90,9 +55,23 @@ def full_text_search(q: str):
                     "data": exp
                 })
 
-    # Full project pages
+        # ---- Search profile project summaries ----
+        for project in profile.get("projects", []):
+            if q in project.get("description", "").lower():
+                results.append({
+                    "type": "profile_project",
+                    "title": project.get("project_title"),
+                    "data": project
+                })
+
+    # ---- Search full project pages (VREyeSAM / SSBC) ----
     for project in projects_collection.find({}, {"_id": 0}):
-        if q in project.get("description", "").lower():
+        text = (
+            " ".join(project.get("overview", [])) +
+            " ".join(project.get("results", {}).get("highlights", []))
+        ).lower()
+
+        if q in text:
             results.append({
                 "type": "project_page",
                 "title": project.get("title"),

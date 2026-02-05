@@ -12,7 +12,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def root():
+    return {
+        "message": "Me-API Playground is live 🚀",
+        "endpoints": ["/health", "/profile", "/projects", "/projects/{slug}"]
+    }
+
 app.include_router(health.router)
 app.include_router(profile.router)
+app.include_router(projects.router)
 app.include_router(search.router)
-app.include_router(projects.router)  
