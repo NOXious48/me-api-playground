@@ -29,14 +29,14 @@ def search_profile_projects(keyword: str):
     keyword = keyword.lower()
 
     return [
-        p for p in profile.get("projects", [])
-        if keyword in p.get("project_title", "").lower()
-        or keyword in p.get("description", "").lower()
+        project for project in profile.get("projects", [])
+        if keyword in project.get("project_title", "").lower()
+        or keyword in project.get("description", "").lower()
     ]
 
 
 # --------------------------------------------------
-# 3️⃣ Global search (experience + profile + project pages)
+# 3️⃣ Global search
 # GET /search?q=...
 # --------------------------------------------------
 @router.get("/")
@@ -70,7 +70,7 @@ def full_text_search(q: str):
                     "data": project
                 })
 
-    # ---- Search full project pages (VREyeSAM / SEG-U-Sclera) ----
+    # ---- Search full project pages ----
     for project in projects_collection.find({}, {"_id": 0}):
         searchable_text = (
             " ".join(project.get("overview", [])) +
@@ -84,5 +84,8 @@ def full_text_search(q: str):
                 "title": project.get("title"),
                 "slug": project.get("slug")
             })
+
+    if not results:
+        raise HTTPException(status_code=404, detail="No results found")
 
     return results

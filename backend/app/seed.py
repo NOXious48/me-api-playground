@@ -1,18 +1,113 @@
-from app.db import projects_collection
-
-from pymongo import MongoClient
 import os
+from pymongo import MongoClient
 
-MONGO_URI = os.getenv("MONGO_URI")
+# --------------------------------------------------
+# MongoDB connection
+# --------------------------------------------------
+MONGODB_URI = os.getenv("MONGODB_URI")
 
-client = MongoClient(MONGO_URI)
+if not MONGODB_URI:
+    raise RuntimeError("MONGODB_URI not set")
+
+client = MongoClient(MONGODB_URI)
 db = client["me_api"]
+
+profile_collection = db["profile"]
 projects_collection = db["projects"]
 
 
-# Clear existing projects
+# --------------------------------------------------
+# Clear existing data
+# --------------------------------------------------
+profile_collection.delete_many({})
 projects_collection.delete_many({})
 
+# --------------------------------------------------
+# PROFILE DATA
+# --------------------------------------------------
+profile_collection.insert_one({
+    "full_name": "Pushp Raj Panth",
+
+    "about": (
+        "Research Intern and B.Tech Electrical Engineering undergraduate at IIT Mandi "
+        "with a specialized focus on Computer Vision, Machine Learning, and Deep Learning. "
+        "Currently co-leading international biometric research between IIT Mandi and NTNU Norway, "
+        "working on advanced segmentation and biometric recognition systems."
+    ),
+
+    "education": {
+        "degree": "B.Tech in Electrical Engineering",
+        "institution": "Indian Institute of Technology, Mandi",
+        "timeline": "2023 – 2027"
+    },
+
+    "experience": [
+        {
+            "role": "Research Intern - Biometric Recognition",
+            "organization": "IIT Mandi & NTNU Norway",
+            "timeline": "Dec 2024 – Present",
+            "description": (
+                "Co-leading research on next-generation biometric authentication systems, "
+                "focusing on EdgeFace optimization and SAM-based segmentation models."
+            )
+        },
+        {
+            "role": "Teaching Assistant - Data Science",
+            "organization": "IIT Mandi",
+            "timeline": "Aug 2024 – Dec 2024",
+            "description": (
+                "Mentored over 500 undergraduate students in Python programming, data analysis, "
+                "and supervised practical evaluations."
+            )
+        }
+    ],
+
+    "technical_skills": {
+            "languages": [
+                "Python",
+                "C++",
+                "SQL",
+                "English (Professional)",
+                "Hindi (Native)",
+                "Japanese (Elementary — N5)"
+            ],
+            "frameworks_and_libraries": [
+                "PyTorch",
+                "TensorFlow",
+                "Scikit-learn",
+                "Keras",
+                "NumPy",
+                "Pandas",
+                "OpenCV"
+            ],
+            "tools_and_platforms": [
+                "Docker",
+                "Git",
+                "MySQL",
+                "Conda",
+                "Jupyter Notebook",
+                "VS Code"
+            ],
+            "architectures_and_models": [
+                "SAM (Segment Anything Model) & SAM 2",
+                "YOLO (v8, v11)",
+                "EdgeFace",
+                "Vision Transformers (ViT)",
+                "DeepLabV3+"
+            ],
+            "specialized_domains": [
+                "Biometric Recognition (Iris, Sclera)",
+                "Defense Applications",
+                "VR/AR Systems",
+                "Image Segmentation",
+                "Prompt Engineering"
+            ]
+        }
+})
+
+# --------------------------------------------------
+# PROJECTS DATA (YOUR EXACT CONTENT)
+# --------------------------------------------------
 projects_collection.insert_many([
 
     # ---------------------------------------------------------
@@ -23,7 +118,6 @@ projects_collection.insert_many([
         "title": "VREyeSAM",
         "subtitle": "Virtual Reality Non-Frontal Iris Segmentation",
 
-        # 🔗 External links (NEW)
         "links": {
             "GitHub Repository": "https://github.com/GeetanjaliGTZ/VREyeSAM.git",
             "Research Paper (ResearchGate)": "https://www.researchgate.net/publication/400248367_VREyeSAM_Virtual_Reality_Non-Frontal_Iris_Segmentation_using_Foundational_Model_with_uncertainty_weighted_loss"
@@ -71,7 +165,6 @@ projects_collection.insert_many([
         "title": "SEG-U-Sclera",
         "subtitle": "SSBC 2025 • IJCB",
 
-        # 🔗 External link (NEW)
         "links": {
             "Research Paper (arXiv)": "https://arxiv.org/abs/2508.10737"
         },
@@ -106,4 +199,4 @@ projects_collection.insert_many([
     }
 ])
 
-print("✅ Detailed project pages seeded successfully with links")
+print("✅ Database seeded successfully (profile + projects)")

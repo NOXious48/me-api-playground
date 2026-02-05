@@ -1,16 +1,12 @@
 import os
 from pymongo import MongoClient
-import certifi  # <--- Import this
 
-MONGODB_URI = os.getenv("MONGODB_URI")
+MONGO_URI = os.getenv("MONGO_URI")
 
-if not MONGODB_URI:
-    # Fallback for local testing if env var is missing
-    MONGODB_URI = "mongodb://localhost:27017" 
+if not MONGO_URI:
+    raise RuntimeError("MONGO_URI not set")
 
-# Add tlsCAFile=certifi.where() to fix the handshake error
-client = MongoClient(MONGODB_URI, tlsCAFile=certifi.where())
-
+client = MongoClient(MONGO_URI)
 db = client["me_api"]
 
 profile_collection = db["profile"]

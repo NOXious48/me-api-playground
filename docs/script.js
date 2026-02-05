@@ -1,60 +1,57 @@
-const PROFILE_API = "https://me-api-playground-s689.onrender.com/profile";
-const PROJECTS_API = "https://me-api-playground-s689.onrender.com/projects";
+// const PROFILE_API = "https://me-api-playground.onrender.com/profile";
+// const PROJECTS_API = "https://me-api-playground.onrender.com/projects";
+
+// ✅ Local backend
+const PROFILE_API = "http://127.0.0.1:8000/profile";
+const PROJECTS_API = "http://127.0.0.1:8000/projects";
 
 // -----------------------------
 // Load profile content
 // -----------------------------
 fetch(PROFILE_API)
-  .then(res => res.json())
+  .then(res => {
+    if (!res.ok) throw new Error("Profile API error");
+    return res.json();
+  })
   .then(data => {
-    renderSummary(data.professional_profile);
+    renderSummary(data.about);
     renderEducation(data.education);
     renderSkills(data.technical_skills);
   })
-  .catch(() => {
+  .catch(err => {
+    console.error(err);
     document.getElementById("summary").innerText =
       "Failed to load profile.";
   });
 
 // -----------------------------
-// Load project pages
+// Load projects
 // -----------------------------
 fetch(PROJECTS_API)
   .then(res => res.json())
   .then(projects => {
-    // ✅ enforce visual ordering
-    // enforce visual ordering
     const ORDER = ["ssbc", "vreyesam"];
-
     projects.sort(
-    (a, b) => ORDER.indexOf(a.slug) - ORDER.indexOf(b.slug)
+      (a, b) => ORDER.indexOf(a.slug) - ORDER.indexOf(b.slug)
     );
-
-
     renderProjects(projects);
-  })
-  .catch(() => {
-    document.getElementById("projects").innerText =
-      "Failed to load projects.";
   });
 
 // -----------------------------
 // Render functions
 // -----------------------------
-function renderSummary(profile) {
+function renderSummary(text) {
   document.getElementById("summary").innerHTML =
-    `<p>${profile.professional_summary}</p>`;
+    `<p>${text}</p>`;
 }
 
 function renderEducation(edu) {
-  const c = document.getElementById("education");
-  c.innerHTML = `
+  document.getElementById("education").innerHTML = `
     <div class="card">
       <div class="card-title">${edu.degree}</div>
       <div class="card-sub">
         ${edu.institution} • ${edu.timeline}
       </div>
-      <div class="card-desc">${edu.specialization}</div>
     </div>
   `;
 }
@@ -74,9 +71,7 @@ function renderProjects(projects) {
     div.innerHTML = `
       <div class="card-title">${p.title}</div>
       <div class="card-sub">${p.subtitle}</div>
-      <div class="card-desc">
-        Click to view full project details →
-      </div>
+      <div class="card-desc">Click to view full project details →</div>
     `;
 
     a.appendChild(div);
@@ -88,12 +83,16 @@ function renderSkills(skills) {
   const c = document.getElementById("skills");
   c.innerHTML = "";
 
-  Object.entries(skills).forEach(([key, vals]) => {
+  Object.entries(skills).forEach(([category, items]) => {
     const div = document.createElement("div");
     div.className = "card";
     div.innerHTML = `
-      <div class="card-title">${key.replaceAll("_", " ")}</div>
-      <div class="card-desc">${vals.join(", ")}</div>
+      <div class="card-title">
+        ${category.replaceAll("_", " ")}
+      </div>
+      <div class="card-desc">
+        ${items.join(", ")}
+      </div>
     `;
     c.appendChild(div);
   });
