@@ -1,5 +1,15 @@
 from app.db import projects_collection
 
+from pymongo import MongoClient
+import os
+
+MONGO_URI = os.getenv("MONGO_URI")
+
+client = MongoClient(MONGO_URI)
+db = client["me_api"]
+projects_collection = db["projects"]
+
+
 # Clear existing projects
 projects_collection.delete_many({})
 
