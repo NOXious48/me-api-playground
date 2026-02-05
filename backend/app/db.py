@@ -1,8 +1,12 @@
+import os
 from pymongo import MongoClient
 
-MONGO_URL = "mongodb://localhost:27017"
+MONGODB_URI = os.getenv("MONGODB_URI")
 
-client = MongoClient(MONGO_URL)
+if not MONGODB_URI:
+    raise RuntimeError("MONGODB_URI environment variable not set")
+
+client = MongoClient(MONGODB_URI)
 db = client["me_api"]
 
 profile_collection = db["profile"]
