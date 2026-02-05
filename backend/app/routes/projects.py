@@ -1,15 +1,20 @@
 from fastapi import APIRouter, HTTPException
 from app.db import projects_collection
 
-router = APIRouter(prefix="/projects", tags=["Projects"])
+router = APIRouter(tags=["Projects"])
 
-@router.get("/")
+@router.get("/projects")
 def list_projects():
-    return list(
-        projects_collection.find({}, {"_id": 0, "slug": 1, "title": 1, "subtitle": 1})
-    )
+    return [
+        {
+            "slug": p["slug"],
+            "title": p["title"],
+            "subtitle": p["subtitle"]
+        }
+        for p in projects_collection.find({}, {"_id": 0})
+    ]
 
-@router.get("/{slug}")
+@router.get("/projects/{slug}")
 def get_project(slug: str):
     project = projects_collection.find_one({"slug": slug}, {"_id": 0})
     if not project:

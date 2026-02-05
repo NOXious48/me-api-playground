@@ -1,7 +1,8 @@
 const params = new URLSearchParams(window.location.search);
 const slug = params.get("slug");
 
-const API = `http://127.0.0.1:8000/projects/${slug}`;
+const API = `https://me-api-playground-2xt3.onrender.com/projects/${slug}`;
+
 
 fetch(API)
   .then(res => {

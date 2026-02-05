@@ -3,9 +3,9 @@ from app.db import profile_collection, projects_collection
 
 router = APIRouter(prefix="/search", tags=["Search"])
 
-
 # --------------------------------------------------
 # 1️⃣ List technical skills
+# GET /search/skills
 # --------------------------------------------------
 @router.get("/skills")
 def list_skills():
@@ -17,7 +17,8 @@ def list_skills():
 
 
 # --------------------------------------------------
-# 2️⃣ Search CV-level project summaries (profile projects)
+# 2️⃣ Search CV-level project summaries
+# GET /search/profile-projects?keyword=...
 # --------------------------------------------------
 @router.get("/profile-projects")
 def search_profile_projects(keyword: str):
@@ -35,7 +36,8 @@ def search_profile_projects(keyword: str):
 
 
 # --------------------------------------------------
-# 3️⃣ Global search across profile + project pages
+# 3️⃣ Global search (experience + profile + project pages)
+# GET /search?q=...
 # --------------------------------------------------
 @router.get("/")
 def full_text_search(q: str):
@@ -47,7 +49,11 @@ def full_text_search(q: str):
     # ---- Search experience ----
     if profile:
         for exp in profile.get("experience", []):
-            haystack = (exp.get("role", "") + exp.get("organization", "")).lower()
+            haystack = (
+                exp.get("role", "") +
+                exp.get("organization", "")
+            ).lower()
+
             if q in haystack:
                 results.append({
                     "type": "experience",
@@ -64,14 +70,15 @@ def full_text_search(q: str):
                     "data": project
                 })
 
-    # ---- Search full project pages (VREyeSAM / SSBC) ----
+    # ---- Search full project pages (VREyeSAM / SEG-U-Sclera) ----
     for project in projects_collection.find({}, {"_id": 0}):
-        text = (
+        searchable_text = (
             " ".join(project.get("overview", [])) +
+            " " +
             " ".join(project.get("results", {}).get("highlights", []))
         ).lower()
 
-        if q in text:
+        if q in searchable_text:
             results.append({
                 "type": "project_page",
                 "title": project.get("title"),

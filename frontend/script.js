@@ -1,5 +1,5 @@
-const PROFILE_API = "http://127.0.0.1:8000/profile";
-const PROJECTS_API = "http://127.0.0.1:8000/projects";
+const PROJECTS_API = "https://me-api-playground-2xt3.onrender.com/projects";
+
 
 // -----------------------------
 // Load profile content
