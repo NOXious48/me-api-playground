@@ -1,9 +1,9 @@
-// const PROFILE_API = "https://me-api-playground.onrender.com/profile";
-// const PROJECTS_API = "https://me-api-playground.onrender.com/projects";
+// const PROFILE_API = "https://me-api-playground-2jal.onrender.com/profile";
+// const PROJECTS_API = "https://me-api-playground-2jal.onrender.com/projects";
 
 // ✅ Local backend
-const PROFILE_API = "http://127.0.0.1:8000/profile";
-const PROJECTS_API = "http://127.0.0.1:8000/projects";
+//const PROFILE_API = "http://127.0.0.1:8000/profile";
+//const PROJECTS_API = "http://127.0.0.1:8000/projects";
 
 // -----------------------------
 // Load profile content

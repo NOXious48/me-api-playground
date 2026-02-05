@@ -1,12 +1,12 @@
 const params = new URLSearchParams(window.location.search);
 const slug = params.get("slug");
 
-//const API = `https://me-api-playground-s689.onrender.com/projects/${slug}`;
+const API = `https://me-api-playground-2jal.onrender.com/projects/${slug}`;
 
 
 
 // ✅ Pointing to your local Python backend
-const API = `http://127.0.0.1:8000/projects/${slug}`;
+//const API = `http://127.0.0.1:8000/projects/${slug}`;
 fetch(API)
   .then(res => {
     if (!res.ok) throw new Error("Project not found");
