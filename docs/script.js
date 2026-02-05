@@ -1,5 +1,5 @@
+const PROFILE_API = "https://me-api-playground-2xt3.onrender.com/profile";
 const PROJECTS_API = "https://me-api-playground-2xt3.onrender.com/projects";
-
 
 // -----------------------------
 // Load profile content

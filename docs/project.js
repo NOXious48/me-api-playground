@@ -4,6 +4,8 @@ const slug = params.get("slug");
 const API = `https://me-api-playground-2xt3.onrender.com/projects/${slug}`;
 
 
+
+
 fetch(API)
   .then(res => {
     if (!res.ok) throw new Error("Project not found");
