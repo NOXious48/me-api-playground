@@ -1,7 +1,7 @@
 const params = new URLSearchParams(window.location.search);
 const slug = params.get("slug");
 
-const API = `https://me-api-playground-2xt3.onrender.com/projects/${slug}`;
+const API = `https://me-api-playground-s689.onrender.com/projects/${slug}`;
 
 
 
