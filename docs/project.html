@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg: #0e1116;
+        --panel: #161b22;
+        --border: #232a33;
+        --text: #e6edf3;
+        --muted: #9da7b3;
+        --accent: #58a6ff;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Inter", system-ui, sans-serif;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+      }
+
+      header {
+        border-bottom: 1px solid var(--border);
+        padding: 28px 48px;
+      }
+
+      header h1 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+
+      header a {
+        color: var(--accent);
+        font-size: 13px;
+        text-decoration: none;
+      }
+
+      section {
+        padding: 48px;
+        max-width: 1100px;
+        margin: auto;
+      }
+
+      h2 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 32px 0 14px;
+      }
+
+      .subtitle {
+        color: var(--muted);
+        font-size: 14px;
+        margin-bottom: 24px;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .card ul {
+        padding-left: 18px;
+      }
+
+      .card li {
+        margin-bottom: 10px;
+      }
+
+      .badge {
+        display: inline-block;
+        margin: 6px 6px 0 0;
+        padding: 4px 10px;
+        font-size: 12px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        color: var(--muted);
+      }
+
+      footer {
+        text-align: center;
+        font-size: 12px;
+        padding: 24px;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1 id="title">Loading...</h1>
+      <a href="index.html">← Back to Profile</a>
+    </header>
+
+    <section>
+      <div class="subtitle" id="subtitle"></div>
+
+      <!-- Overview -->
+      <div class="card" id="overview"></div>
+
+      <!-- Links -->
+      <div class="card" id="links" style="display: none"></div>
+
+      <h2>Architecture</h2>
+      <div class="card">
+        <ul id="architecture"></ul>
+      </div>
+
+      <h2>Methodology</h2>
+      <div class="card">
+        <ul id="methodology"></ul>
+      </div>
+
+      <h2>Metrics</h2>
+      <div class="card" id="metrics"></div>
+
+      <h2>Impact</h2>
+      <div class="card">
+        <ul id="impact"></ul>
+      </div>
+    </section>
+
+    <footer>© Pushp Raj Panth • Built with FastAPI & MongoDB</footer>
+
+    <script src="project.js"></script>
+  </body>
+</html>
